@@ -1,0 +1,25 @@
+{
+  "areas": {
+    "area1": {
+      "name": "area1",
+      "capacity": 360,
+      "factor": 0.68,
+      "inputs": ["Area1"]
+    }
+  },
+  "limits": {
+    "green": {
+      "threshold": 0,
+      "image": "img/green_lights.png"
+    },
+    "yellow": {
+      "threshold": 91,
+      "image": "img/yellow_lights.png"
+    },
+    "red": {
+      "threshold": 96,
+      "image": "img/red_lights.png"
+    }
+  },
+  "datafile": "input_file"
+}
