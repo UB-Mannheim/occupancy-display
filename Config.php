@@ -5,9 +5,11 @@ namespace OccupancyDisplay;
 class Config {
     const CONFIG_FILE = (__DIR__ . '/config.json');
 
-    private $_areas;
-    private $_limits;
-    private $_dataFile;
+    /** @var array<string,mixed> */
+    private array $_areas;
+    /** @var array<string,mixed> */
+    private array $_limits;
+    private string $_dataFile;
     
     public function __construct() 
     {
@@ -16,7 +18,7 @@ class Config {
         $this->_dataFile = "";
     }
 
-    public function load($configFile = self::CONFIG_FILE) {
+  public function load(string $configFile = self::CONFIG_FILE) : void {
         if (!file_exists($configFile)) {
             error_log("Configuration file $configFile not found");
             return;
@@ -54,7 +56,11 @@ class Config {
         }
     }
 
-    public function parseAreaConfig($area) : array {
+    /**
+     * @param array<string,mixed> $area
+     * @return array<string,mixed>
+     */
+    public function parseAreaConfig(array $area) : array {
         return array(
             "name"     => $area["name"],
             "capacity" => $area["capacity"],
@@ -64,28 +70,44 @@ class Config {
         );
     }
 
-    public function parseLimitConfig($limit) : array {
+    /**
+     * @param array<string,mixed> $limit
+     * @return array<string,mixed>
+     */
+    public function parseLimitConfig(array $limit) : array {
         return array(
             "threshold" => $limit["threshold"],
             "image"     => $limit["image"],
         );
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function areas(): array
     {
         return $this->_areas;
     }
 
+    /**
+     * @return array<string,mixed> | null
+     */
     public function area(string $name) : array | null
     {
         return $this->_areas[$name];
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function limits(): array
     {
         return $this->_limits;
     }
 
+    /**
+     * @return array<string,mixed> | null
+     */
     public function limit(string $name) : array | null
     {
         return $this->_limits[$name];
