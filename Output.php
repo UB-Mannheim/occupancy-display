@@ -35,7 +35,9 @@ class Output
       $capacity = $area["capacity"];
       $value = 0;
       foreach ($area["inputs"] as $input) {
-        $value += $data[$input];
+        if (array_key_exists($input, $data)) {
+          $value += $data[$input];
+        }
       }
       $value = 100 * $value / ($area["factor"] * $capacity);
       $value = $value < 0 ? 0 : $value;

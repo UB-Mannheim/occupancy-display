@@ -38,7 +38,7 @@ class Config
     if (array_key_exists('datafile', $json_data)) {
       $this->dataFile = realpath(__DIR__ . '/' . $json_data['datafile']);
       if (!file_exists($this->dataFile)) {
-        error_log("Input file " . $this->dataFile . " not found");
+        error_log("Input file '{$json_data['datafile']}' not found");
       }
     }
 
