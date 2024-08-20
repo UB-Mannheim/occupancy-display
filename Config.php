@@ -45,17 +45,9 @@ class Config
       }
     }
 
-    if (array_key_exists('areas', $json_data)) {
-      foreach ($json_data['areas'] as $id => $area) {
-        $this->areas[$id] = self::parseAreaConfig($area);
-      }
-    }
+    $this->areas = $json_data['areas'] ?? array();
 
-    if (array_key_exists('limits', $json_data)) {
-      foreach ($json_data['limits'] as $id => $limit) {
-        $this->limits[$id] = self::parseLimitConfig($limit);
-      }
-    }
+    $this->limits = $json_data['limits'] ?? array();
     uasort($this->limits, function ($a, $b) {
       if ($a["threshold"] == $b["threshold"]) {
         return 0;
@@ -63,42 +55,7 @@ class Config
       return ($a["threshold"] < $b["threshold"]) ? -1 : 1;
     });
 
-    if (array_key_exists('texts', $json_data)) {
-      foreach ($json_data['texts'] as $lang => $texts) {
-        $this->texts[$lang] = $texts;
-      }
-    }
-  }
-
-  /**
-   * Return selected area properties from $area.
-   *
-   * @param array<string,mixed> $area
-   * @return array<string,mixed>
-   */
-  public function parseAreaConfig(array $area): array
-  {
-    return array(
-      "name"     => $area["name"],
-      "capacity" => $area["capacity"],
-      "factor"   => $area["factor"],
-      "offset"   => 0,
-      "inputs"   => $area["inputs"],
-    );
-  }
-
-  /**
-   * Return selected limit properties from $limit.
-   *
-   * @param array<string,mixed> $limit
-   * @return array<string,mixed>
-   */
-  public function parseLimitConfig(array $limit): array
-  {
-    return array(
-      "threshold" => $limit["threshold"],
-      "image"     => $limit["image"],
-    );
+    $this->texts = $json_data['texts'] ?? array();
   }
 
   /**
