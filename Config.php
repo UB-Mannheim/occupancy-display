@@ -6,17 +6,20 @@ class Config
 {
   public const CONFIG_FILE = (__DIR__ . '/config.json');
 
+  private string $dataFile;
   /** @var array<string,mixed> */
   private array $areas;
   /** @var array<string,mixed> */
   private array $limits;
-  private string $dataFile;
+  /** @var array<string,mixed> */
+  private array $texts;
 
   public function __construct()
   {
+    $this->dataFile = "";
     $this->areas  = array();
     $this->limits = array();
-    $this->dataFile = "";
+    $this->texts = array();
   }
 
   public function load(string $configFile = self::CONFIG_FILE): void
@@ -30,6 +33,13 @@ class Config
     if (is_null($json_data) || !count($json_data)) {
       error_log('Could not read configuration file, syntax error?');
       return;
+    }
+
+    if (array_key_exists('datafile', $json_data)) {
+      $this->dataFile = realpath(__DIR__ . '/' . $json_data['datafile']);
+      if (!file_exists($this->dataFile)) {
+        error_log("Input file " . $this->dataFile . " not found");
+      }
     }
 
     if (array_key_exists('areas', $json_data)) {
@@ -50,10 +60,9 @@ class Config
       return ($a["threshold"] < $b["threshold"]) ? -1 : 1;
     });
 
-    if (array_key_exists('datafile', $json_data)) {
-      $this->dataFile = realpath(__DIR__ . '/' . $json_data['datafile']);
-      if (!file_exists($this->dataFile)) {
-        error_log("Input file " . $this->dataFile . " not found");
+    if (array_key_exists('texts', $json_data)) {
+      foreach ($json_data['texts'] as $lang => $texts) {
+        $this->texts[$lang] = $texts;
       }
     }
   }
@@ -126,6 +135,15 @@ class Config
       }
     }
     return $state;
+  }
+
+  public function texts(string $lang):array
+  {
+    if (!array_key_exists($lang, $this->texts)) {
+      error_log("No texts for language $lang defined in configuration");
+      return array();
+    }
+    return $this->texts[$lang];
   }
 
   public function dataFile(): string

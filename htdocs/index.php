@@ -22,13 +22,20 @@ foreach ($_GET as $paramName => $paramValue) {
   }
 }
 
+$area = array_key_exists("area", $_GET)
+      ? strtolower(htmlspecialchars($_GET["area"])) : null;
+$lang = array_key_exists("lang", $_GET)
+      ? strtolower(htmlspecialchars($_GET["lang"]))
+      : "de";
+$jsonout = array_key_exists('output', $_GET)
+         ? htmlspecialchars($_GET['output']) == 'json'
+         : false;
+
 $output = array(
-  "date" => Output::date($config->dataFile()),
+  "lastupdated" => Output::lastUpdated($config->dataFile(), $lang),
+  "texts" => $config->texts($lang),
 );
 
-$area = array_key_exists("area", $_GET) ? htmlspecialchars($_GET["area"]) : null;
-$lang = array_key_exists("lang", $_GET) ? htmlspecialchars($_GET["lang"]) : "DE";
-$jsonout = array_key_exists('output', $_GET) ? htmlspecialchars($_GET['output']) == 'json' : false;
 
 if (!is_null($area)) {
   $output["areas"][$area] = Output::area($config, $area);
@@ -47,11 +54,11 @@ if ($jsonout) {
 <html lang="de">
 <head>
   <title>Bereichsauslastung</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta http-equiv="refresh" content="300" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="refresh" content="300">
   <meta name="author" content="UB Mannheim">
-  <meta name="keywords" lang="de" content="Bereichsauslastung, Arbeitsplätze, Universitätsbibliothek UB Mannheim" />
-  <meta name="description" content="Anzeige der Bereichsauslastung der Bibliotheksbereiche in der UB Mannheim" />
+  <meta name="keywords" lang="de" content="Bereichsauslastung, Arbeitsplätze, Universitätsbibliothek UB Mannheim">
+  <meta name="description" content="Anzeige der Bereichsauslastung der Bibliotheksbereiche in der UB Mannheim">
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="main.css">
 </head>
@@ -69,19 +76,21 @@ if ($jsonout) {
     $value = $areaData['percent'];
     $state = $config->currentState($value);
     $image = $config->limit($state)["image"];
+    $tooltip = strtr($output["texts"]["tooltip"], $areaData);
+
     $HTML_ALL .= "
     <tr>
       <td class='colArea'>${areaData['name']}</td>
-      <td class='colValue' title=''>${value} %</td>
-      <td class='colSignal'><img src='${image}'></td>
+      <td class='colValue' title='${tooltip}'>${value} %</td>
+      <td class='colSignal'><img src='${image}' alt='$state'></td>
     </tr>";
   }
 
   $HTML_ALL .= "
   </table>
   <div id='time'>
-    Stand: ${output['date']} Uhr
-  </p>";
+    " . ($lang == "de" ? "Stand" : "Last updated") . ": ${output['lastupdated']}
+  </div>";
 
   $HTML_ALL .= '
 </body>
