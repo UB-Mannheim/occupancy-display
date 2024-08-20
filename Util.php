@@ -10,6 +10,10 @@ use DateTimeZone;
  */
 function lastUpdated(string $file, string $lang = "de"): string
 {
+  if (!file_exists($file)) {
+    error_log("Update timestamp reference '$file' does not exist");
+    return $lang === "en" ? "no time reference" : "keine Zeitreferenz";
+  }
   $date = date("d M Y H:i:s T", filemtime($file));
   $time = DateTime::createFromFormat("d M Y G:i:s e", $date);
   $timezone = 'Europe/Berlin';
@@ -21,37 +25,39 @@ function lastUpdated(string $file, string $lang = "de"): string
 }
 
 /**
- * Return the current data for area $name.
+ * Return the current data for area $id.
  *
  * @return array<string,mixed>
  */
-function area(Config $config, string $name): array
+function area(Config $config, string $id): array
 {
   $data = parseDataFile($config->dataFile());
 
-  $area = $config->area($name);
-  if (!is_null($area)) {
-    $capacity = $area["capacity"];
-    $value = 0;
-    foreach ($area["inputs"] as $input) {
-      if (array_key_exists($input, $data)) {
-        $value += $data[$input];
-      }
-    }
-    $value = 100 * $value / ($area["factor"] * $capacity);
-    $value = $value < 0 ? 0 : $value;
-    $value = $value > 100 ? 100 : $value;
-    $value = (int) floor($value + 0.5);
-
-    return array(
-      "name"     => $area["name"],
-      "capacity" => $capacity,
-      "percent"  => $value,
-      "state"    => $config->currentState($value),
-    );
+  $area = $config->area($id);
+  if (is_null($area)) {
+    return array();
   }
 
-  return array();
+  $name = $area["name"] ?? "Empty Name";
+  $capacity = $area["capacity"] ?? -1;
+  $factor = $area["factor"] ?? 1;
+  $value = 0;
+  foreach ($area["inputs"] as $input) {
+    if (array_key_exists($input, $data)) {
+      $value += $data[$input];
+    }
+  }
+  $value = 100 * $value / ($factor * $capacity);
+  $value = $value < 0 ? 0 : $value;
+  $value = $value > 100 ? 100 : $value;
+  $value = (int) floor($value + 0.5);
+
+  return array(
+    "name"     => $name,
+    "capacity" => $capacity,
+    "percent"  => $value,
+    "state"    => $config->currentState($value),
+  );
 }
 
 /**
@@ -66,12 +72,25 @@ function parseDataFile(string $dataFile): array
 {
   $ret = array();
   if (!file_exists($dataFile)) {
-    error_log('Data file ' . $dataFile . ' not found');
+    error_log("Data file '$dataFile' not found");
     return $ret;
   }
 
-  foreach (explode(" ", file_get_contents($dataFile)) as $area) {
+  $data = file_get_contents($dataFile);
+  if (is_null($data) || !strlen($data)) {
+    error_log("No data in file '$dataFile'");
+    return $ret;
+  }
+
+  foreach (explode(" ", $data) as $area) {
+    if (strlen(trim($area)) === 0) {
+      continue;
+    }
     $areaData = explode(":", $area);
+    if (count($areaData) != 2) {
+      error_log("Format error in file '$dataFile': '$area'");
+      continue;
+    }
     $ret[$areaData[0]] = (int) $areaData[1];
   }
   return $ret;
