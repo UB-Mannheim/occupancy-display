@@ -49,33 +49,31 @@ if ($jsonout) {
   header('Content-Type: application/json');
   echo json_encode($output);
 } else {
-  $HTML_ALL = '
+  $HTML_ALL = "
 <!DOCTYPE html>
-<html lang="de">
+<html lang='$lang'>
 <head>
-  <title>Bereichsauslastung</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta http-equiv="refresh" content="300">
-  <meta name="author" content="UB Mannheim">
-  <meta name="keywords" lang="de" content="Bereichsauslastung, Arbeitsplätze, Universitätsbibliothek UB Mannheim">
-  <meta name="description" content="Anzeige der Bereichsauslastung der Bibliotheksbereiche in der UB Mannheim">
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="main.css">
+  <title>" . ($lang == "de" ? "Bereichsauslastung" : "Area Occupancy") . "</title>
+  <meta http-equiv='content-type' content='text/html; charset=utf-8'>
+  <meta http-equiv='refresh' content='300'>
+  <meta name='robots' content='noindex, nofollow'>
+  <link rel='stylesheet' href='main.css'>
 </head>
-<body>';
+<body>";
 
   $HTML_ALL .= "
   <table>
     <tr>
-      <th>Bereich</th>
-      <th>Auslastung</th>
+      <th>" . ($lang == "de" ? "Bereich" : "Area") . "</th>
+      <th>" . ($lang == "de" ? "Auslastung" : "Occupancy") . "</th>
       <th>&nbsp;</th>
     </tr>";
 
   foreach ($output["areas"] as $areaId => $areaData) {
     $value = $areaData['percent'];
     $state = $config->currentState($value);
-    $image = $config->limit($state)["image"];
+    $image = $config->limit($state)["image"] ?? "";
+    // replace words inside the tooltip text matching $areaData keys
     $tooltip = strtr($output["texts"]["tooltip"], $areaData);
 
     $HTML_ALL .= "
