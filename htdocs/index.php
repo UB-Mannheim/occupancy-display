@@ -80,16 +80,16 @@ if ($jsonout) {
 
     $HTML_ALL .= "
     <tr>
-      <td class='colArea'>${areaData['name']}</td>
-      <td class='colValue' title='${tooltip}'>${value} %</td>
-      <td class='colSignal'><img src='${image}' alt='$state'></td>
+      <td class='colArea'>{$areaData['name']}</td>
+      <td class='colValue' title='{$tooltip}'>{$value} %</td>
+      <td class='colSignal'><img src='{$image}' alt='$state'></td>
     </tr>";
   }
 
   $HTML_ALL .= "
   </table>
   <div id='time'>
-    " . ($lang == "de" ? "Stand" : "Last updated") . ": ${output['lastupdated']}
+    " . ($lang == "de" ? "Stand" : "Last updated") . ": {$output['lastupdated']}
   </div>";
 
   $HTML_ALL .= '
