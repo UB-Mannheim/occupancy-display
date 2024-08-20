@@ -23,13 +23,11 @@ foreach ($_GET as $paramName => $paramValue) {
 }
 
 $area = array_key_exists("area", $_GET)
-      ? strtolower(htmlspecialchars($_GET["area"])) : null;
+? strtolower(htmlspecialchars($_GET["area"])) : null;
 $lang = array_key_exists("lang", $_GET)
-      ? strtolower(htmlspecialchars($_GET["lang"]))
-      : "de";
+? strtolower(htmlspecialchars($_GET["lang"])) : "de";
 $jsonout = array_key_exists('output', $_GET)
-         ? htmlspecialchars($_GET['output']) == 'json'
-         : false;
+? htmlspecialchars($_GET['output']) == 'json' : false;
 
 $output = array(
   "lastupdated" => Output::lastUpdated($config->dataFile(), $lang),

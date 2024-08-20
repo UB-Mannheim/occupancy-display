@@ -11,14 +11,14 @@ class Output
   {
   }
 
-  public static function lastUpdated(string $file, string $lang="de"): string
+  public static function lastUpdated(string $file, string $lang = "de"): string
   {
     $date = date("d M Y H:i:s T", filemtime($file));
     $time = DateTime::createFromFormat("d M Y G:i:s e", $date);
     $timezone = 'Europe/Berlin';
     $time->setTimezone(new DateTimeZone($timezone));
     if ($lang === "en") {
-        return $time->format("Y-m-d, g:i a");
+      return $time->format("Y-m-d, g:i a");
     }
     return $time->format("d.m.y, H:i") . " Uhr";
   }

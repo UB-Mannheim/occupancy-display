@@ -137,7 +137,10 @@ class Config
     return $state;
   }
 
-  public function texts(string $lang):array
+  /**
+   * @return array<string,mixed>
+   */
+  public function texts(string $lang): array
   {
     if (!array_key_exists($lang, $this->texts)) {
       error_log("No texts for language $lang defined in configuration");
