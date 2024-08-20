@@ -21,5 +21,17 @@
       "image": "img/red_lights.png"
     }
   },
-  "datafile": "input_file"
+  "datafile": "input_file",
+  "texts": {
+    "en": {
+      "tooltip": "percent % of capacity seats in total are occupied",
+      "nodata": "Temporarily no data available",
+      "closed": "No seats available"
+    },
+    "de": {
+      "tooltip": "percent % von capacity Arbeitsplätzen sind belegt",
+      "nodata": "Momentan keine Daten verfügbar",
+      "closed": "Keine Arbeitsplätze vorhanden"
+    }
+  }
 }
