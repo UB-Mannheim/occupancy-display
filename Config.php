@@ -22,6 +22,9 @@ class Config
     $this->texts = array();
   }
 
+  /**
+   * Load configuration data from $configFile into memory.
+  */
   public function load(string $configFile = self::CONFIG_FILE): void
   {
     if (!file_exists($configFile)) {
@@ -68,6 +71,8 @@ class Config
   }
 
   /**
+   * Return selected area properties from $area.
+   *
    * @param array<string,mixed> $area
    * @return array<string,mixed>
    */
@@ -83,6 +88,8 @@ class Config
   }
 
   /**
+   * Return selected limit properties from $limit.
+   *
    * @param array<string,mixed> $limit
    * @return array<string,mixed>
    */
@@ -95,6 +102,8 @@ class Config
   }
 
   /**
+   * Return full areas array.
+   *
    * @return array<string,mixed>
    */
   public function areas(): array
@@ -103,6 +112,8 @@ class Config
   }
 
   /**
+   * Return property array for area $name.
+   *
    * @return array<string,mixed> | null
    */
   public function area(string $name): array | null
@@ -111,6 +122,8 @@ class Config
   }
 
   /**
+   * Return full limits array.
+   *
    * @return array<string,mixed>
    */
   public function limits(): array
@@ -119,6 +132,8 @@ class Config
   }
 
   /**
+   * Return property array for limit $name.
+   *
    * @return array<string,mixed> | null
    */
   public function limit(string $name): array | null
@@ -126,6 +141,9 @@ class Config
     return $this->limits[$name];
   }
 
+  /**
+   * Return limit id correspondiing to counter $value.
+   */
   public function currentState(int $value): string
   {
     $state = "";
@@ -138,6 +156,8 @@ class Config
   }
 
   /**
+   * Return array for texts for $lang.
+   *
    * @return array<string,mixed>
    */
   public function texts(string $lang): array
@@ -149,6 +169,9 @@ class Config
     return $this->texts[$lang];
   }
 
+  /**
+   * Return name of input datafile.
+   */
   public function dataFile(): string
   {
     return $this->dataFile;

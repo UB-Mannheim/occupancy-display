@@ -1,10 +1,10 @@
 <?php
 
 require_once '../Config.php';
-require_once '../Output.php';
+require_once '../Util.php';
 
 use OccupancyDisplay\Config;
-use OccupancyDisplay\Output;
+use function OccupancyDisplay\{area,lastUpdated};
 
 // load configuration file
 $config = new Config();
@@ -29,20 +29,22 @@ $lang = array_key_exists("lang", $_GET)
 $jsonout = array_key_exists('output', $_GET)
 ? htmlspecialchars($_GET['output']) == 'json' : false;
 
+// initialize global output array
 $output = array(
-  "lastupdated" => Output::lastUpdated($config->dataFile(), $lang),
+  "lastupdated" => lastUpdated($config->dataFile(), $lang),
   "texts" => $config->texts($lang),
 );
 
-
+// add area information to output array
 if (!is_null($area)) {
-  $output["areas"][$area] = Output::area($config, $area);
+  $output["areas"][$area] = area($config, $area);
 } else {
   foreach ($config->areas() as $areaId => $areaConfig) {
-    $output["areas"][$areaId] = Output::area($config, $areaId);
+    $output["areas"][$areaId] = area($config, $areaId);
   }
 }
 
+// print JSON or HTML output
 if ($jsonout) {
   header('Content-Type: application/json');
   echo json_encode($output);
