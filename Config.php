@@ -75,7 +75,7 @@ class Config
    */
   public function area(string $name): array | null
   {
-    return $this->areas[$name];
+    return $this->areas[$name] ?? null;
   }
 
   /**
@@ -95,7 +95,7 @@ class Config
    */
   public function limit(string $name): array | null
   {
-    return $this->limits[$name];
+    return $this->limits[$name] ?? null;
   }
 
   /**

@@ -77,7 +77,7 @@ function parseDataFile(string $dataFile): array
   }
 
   $data = file_get_contents($dataFile);
-  if (is_null($data) || !strlen($data)) {
+  if ($data === false || !strlen($data)) {
     error_log("No data in file '$dataFile'");
     return $ret;
   }
