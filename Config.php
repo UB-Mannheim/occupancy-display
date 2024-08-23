@@ -99,11 +99,14 @@ class Config
   }
 
   /**
-   * Return limit id correspondiing to counter $value.
+   * Return limit id corresponding to counter $value.
    */
-  public function currentState(int $value): string
+  public function currentState(int $value, string $id=""): string
   {
     $state = "";
+    if (strlen($id) && ($this->areas[$id]["state"] ?? false)) {
+      return $this->areas[$id]["state"];
+    }
     foreach ($this->limits as $limitId => $limitData) {
       if ($value >= $limitData["threshold"]) {
         $state = $limitId;

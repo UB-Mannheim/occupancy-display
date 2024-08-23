@@ -52,7 +52,7 @@ configuration file `config.json`.
 
 | Field | Description |
 | ------| ----------- |
-| `areas` | Dictionary of areas, i.e. identified by id and display *name* `area1`. Additional parameters are the *capacity* for visitors, a correction *factor* and an array of *inputs*. |
+| `areas` | Dictionary of areas, i.e. identified by id and display *name* `area1`. Additional parameters are the *capacity* for visitors, a correction *factor* and an array of *inputs*. *state* can be specified in order to set the display fixed to `closed` or `nodata`. |
 | `limits` | Dictionary of states, i.e. **green**, **yellow** and **red**. The |
 | `datafile` | Path to the input data file. Expected content: `input1:n1 input2:n2 ...`. |
 | `texts` | Dictionary of display texts for languages **en** and **de**. *tooltip*, *nodata* and *closed*. |

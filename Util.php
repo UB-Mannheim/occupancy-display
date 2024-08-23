@@ -56,7 +56,7 @@ function area(Config $config, string $id): array
     "name"     => $name,
     "capacity" => $capacity,
     "percent"  => $value,
-    "state"    => $config->currentState($value),
+    "state"    => $config->currentState($value, $id),
   );
 }
 

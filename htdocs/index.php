@@ -71,16 +71,25 @@ if ($jsonout) {
 
   foreach ($output["areas"] as $areaId => $areaData) {
     $value = $areaData['percent'];
-    $state = $config->currentState($value);
-    $image = $config->limit($state)["image"] ?? "";
-    // replace words inside the tooltip text matching $areaData keys
-    $tooltip = strtr($output["texts"]["tooltip"], $areaData);
-
+    $state = $config->currentState($value, $areaId);
     $HTML_ALL .= "
     <tr>
-      <td class='colArea'>{$areaData['name']}</td>
+      <td class='colArea'>{$areaData['name']}</td>";
+    if (!in_array($state, ["nodata", "closed"])) {
+      // area display state is not overridden by config
+      $image = $config->limit($state)["image"] ?? "";
+      // replace words inside the tooltip text matching $areaData keys
+      $tooltip = strtr($output["texts"]["tooltip"], $areaData);
+      $HTML_ALL .= "
       <td class='colValue' title='{$tooltip}'>{$value} %</td>
-      <td class='colSignal'><img src='{$image}' alt='$state'></td>
+      <td class='colSignal'><img src='{$image}' alt='$state'></td>";
+    } else {
+      // area display state was set in config to nodata or closed
+      $HTML_ALL .= "
+      <td class='colValue'>-</td>
+      <td class='colSignal'>$state</td>";
+    }
+    $HTML_ALL .= "
     </tr>";
   }
 
