@@ -47,7 +47,7 @@ function area(Config $config, string $id): array
       $value += $data[$input];
     }
   }
-  $value = 100 * $value / ($factor * $capacity);
+  $value = $factor * 100 * $value / $capacity;
   $value = $value < 0 ? 0 : $value;
   $value = $value > 100 ? 100 : $value;
   $value = (int) floor($value + 0.5);
